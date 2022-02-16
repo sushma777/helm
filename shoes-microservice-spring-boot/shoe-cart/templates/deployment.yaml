@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+   {{- include "shoe-cart.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+    {{- include "shoe-cart.selectorLabels" . | nindent 8 }}
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+       {{- include "shoe-cart.selectorLabels" . | nindent 8 }}
+    spec:
+      - name: {{ .Values.service.name }}
+        image: {{ .Values.image.repository }}
+        ports:
+        - containerPort: {{ .Values.service.targetPort }}
+          name: {{ .Values.container.name }}

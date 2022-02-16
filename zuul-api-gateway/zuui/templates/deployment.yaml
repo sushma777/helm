@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  {{ .Release.Name}}
+  labels:
+    {{- include "zuui.labels" . | nindent 4}}
+spec:
+  selector:
+    matchLabels:
+      {{- include "zuui.selectorLabels" . | nindent 6}}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+    {{- include "zuui.selectorLabels" . | nindent 6}}
+    spec:
+     containers:
+      - name:  {{ .Values.container.name }}
+        image:  {{ .Values.image.repository }}
+        pullpolicy: {{ .Values.image.pullPolicy }}
+    ports:
+        - containerPort: {{.Values.service.targetport}}
+          name : "zuul-api"
+    affinity:
+    {{- toYaml .Values.cpa | nindent 8 }}
+    
+

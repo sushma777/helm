@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "wishlist.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+    {{- include "wishlist.selectorLabels" . | nindent 6 }}
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+      {{- include "wishlist.selectorLabels" . | nindent 6 }}
+    spec:
+      containers:
+       - name: {{ .Values.container.name }}
+         image: {{ .Values.image.repository }}
+         pullpolicy: {{ .Values.image.pullPolicy }}
+         ports:
+         - containerPort: {{.Values.service.targetPort }}
+           name: {{.Values.service.name }}

@@ -1,0 +1,17 @@
+
+replicaCount: 1
+image:
+  repository: deekshithsn/cart
+  pullPolicy: IfNotPresent
+service:
+  type: Nodeport
+  port: 1004
+  name: cart
+  targetport: 1004
+container:
+  name: cart
+
+
+
+
+ 

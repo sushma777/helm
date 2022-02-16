@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  "offer"
+  namespace: dev
+  labels:
+    app:  "offer"
+spec:
+  selector:
+    matchLabels:
+      app: "offer"
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  "offer"
+    spec:
+      # initContainers:
+        # Init containers are exactly like regular containers, except:
+          # - Init containers always run to completion.
+          # - Each init container must complete successfully before the next one starts.
+      containers:
+      - name:  "offer"
+        image:  deekshithsn/offer
+        ports:
+        - containerPort: 1001
+          name:  "offer"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: offer
+  namespace: dev
+spec:
+  selector:
+    app: "offer"
+  type: ClusterIP
+  ports:
+  - name: offer
+    port: 1001
+    targetPort: 1001
+    # If you set the `spec.type` field to `NodePort` and you want a specific port number,
+    # you can specify a value in the `spec.ports[*].nodePort` field.
+        

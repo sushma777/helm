@@ -1,0 +1,26 @@
+
+replicaCount: 1
+
+image:
+  repository: deekshithsn/zuui
+  pullPolicy: IfNotPresent
+service:
+  type: NodePort
+  name: zuul-api-gateway
+  port: 9999
+  targetport: 9999
+  nodeport: 32740
+container:
+  name: "zuul-api"
+cpa:
+  podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - react-ui
+        topologyKey: "kubernetes.io/hostname"
+
+

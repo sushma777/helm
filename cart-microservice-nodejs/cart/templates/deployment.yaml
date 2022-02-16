@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  {{ .Release.Name }}
+  labels:
+   {{- include "cart.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+    {{- include "cart.selectorLabels" . | nindent 8 }}
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+      {{- include "cart.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+       - name: {{ .Values.container.name }}
+         image:  {{ .Values.image.repository }}
+      ports:
+       - containerPort: {{ .Values.service.targetport }}
+         name: {{ .Values.service.name }}
